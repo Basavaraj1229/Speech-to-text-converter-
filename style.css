@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 30px;
+}
+
+#wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+textarea {
+  width: 80%;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  resize: none;
+}
+
+.container {
+  margin-top: 30px;
+}
+
+.playButton {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+}
+
+.instruction {
+  display: block;
+  margin-top: 10px;
+  font-size: 16px;
+  color: #555;
+}
