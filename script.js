@@ -1,46 +1,39 @@
- var i = 0;
+ function speechToTextConversion() {
+  var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+  var recognition = new SpeechRecognition();
 
+  recognition.continuous = true;
+  recognition.lang = 'en-IN';
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
 
-function speechToTextConversion() {
-	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+  var diagnostic = document.getElementById('text');
+  var isRecording = false;
 
-	var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+  document.getElementById("playButton").onclick = function () {
+    if (!isRecording) {
+      document.getElementById("playButton").src = "record-button-thumb.png";
+      recognition.start();
+      isRecording = true;
+    } else {
+      document.getElementById("playButton").src = "mic.png";
+      recognition.stop();
+      isRecording = false;
+    }
+  };
 
-	var recognition = new SpeechRecognition();
+  recognition.onresult = function (event) {
+    var last = event.results.length - 1;
+    var convertedText = event.results[last][0].transcript;
+    diagnostic.value = convertedText;
+    console.log('Confidence: ' + event.results[0][0].confidence);
+  };
 
-	recognition.continuous = true;
-	recognition.lang = 'en-IN';
-	recognition.interimResults = true;
-	recognition.maxAlternatives = 1;
+  recognition.onnomatch = function () {
+    diagnostic.value = 'I didn’t recognize that.';
+  };
 
-	var diagnostic = document.getElementById('text');
-
-
-	var i = 0;
-	var j = 0;
-	document.getElementById("playButton").onclick = function () {
-		if (i == 0) {
-			document.getElementById("playButton").src = "record-button-thumb.png";
-			recognition.start();
-			i = 1;
-		}
-		else {
-			document.getElementById("playButton").src = "mic.png";
-			recognition.stop();
-			i = 0;
-		}
-	}
-	recognition.onresult = function (event) {
-		var last = event.results.length - 1;
-		var convertedText = event.results[last][0].transcript;
-		diagnostic.value = convertedText;
-		console.log('Confidence: ' + event.results[0][0].confidence);
-	}
-
-	recognition.onnomatch = function (event) {
-		diagnostic.value = 'I didnt recognise that.';
-	}
-	recognition.onerror = function (event) {
-		diagnostic.value = 'Error occurred in recognition: ' + event.error;
-	}
-};
+  recognition.onerror = function (event) {
+    diagnostic.value = 'Error occurred in recognition: ' + event.error;
+  };
+ }
