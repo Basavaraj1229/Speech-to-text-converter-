@@ -1,4 +1,4 @@
- function speechToTextConversion() {
+function speechToTextConversion() {
   var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
   var recognition = new SpeechRecognition();
 
@@ -36,4 +36,4 @@
   recognition.onerror = function (event) {
     diagnostic.value = 'Error occurred in recognition: ' + event.error;
   };
- }
+}
