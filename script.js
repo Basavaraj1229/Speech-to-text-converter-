@@ -1,35 +1,46 @@
-// Check for browser support
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+ var i = 0;
 
-if (!SpeechRecognition) {
-  alert("Sorry, your browser doesn't support Speech Recognition.");
-} else {
-  const recognition = new SpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
 
-  const textArea = document.getElementById("text");
+function speechToTextConversion() {
+	var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
 
-  function startRecognition() {
-    recognition.start();
-  }
+	var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 
-  recognition.onresult = (event) => {
-    let transcript = "";
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      transcript += event.results[i][0].transcript;
-    }
-    textArea.value = transcript;
-  };
+	var recognition = new SpeechRecognition();
 
-  recognition.onerror = (event) => {
-    console.error("Speech recognition error:", event.error);
-  };
+	recognition.continuous = true;
+	recognition.lang = 'en-IN';
+	recognition.interimResults = true;
+	recognition.maxAlternatives = 1;
 
-  recognition.onend = () => {
-    console.log("Speech recognition ended.");
-  };
+	var diagnostic = document.getElementById('text');
 
-  // Make the function accessible in HTML
-  window.startRecognition = startRecognition;
-}
+
+	var i = 0;
+	var j = 0;
+	document.getElementById("playButton").onclick = function () {
+		if (i == 0) {
+			document.getElementById("playButton").src = "record-button-thumb.png";
+			recognition.start();
+			i = 1;
+		}
+		else {
+			document.getElementById("playButton").src = "mic.png";
+			recognition.stop();
+			i = 0;
+		}
+	}
+	recognition.onresult = function (event) {
+		var last = event.results.length - 1;
+		var convertedText = event.results[last][0].transcript;
+		diagnostic.value = convertedText;
+		console.log('Confidence: ' + event.results[0][0].confidence);
+	}
+
+	recognition.onnomatch = function (event) {
+		diagnostic.value = 'I didnt recognise that.';
+	}
+	recognition.onerror = function (event) {
+		diagnostic.value = 'Error occurred in recognition: ' + event.error;
+	}
+};
